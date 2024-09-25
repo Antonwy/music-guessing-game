@@ -2,18 +2,21 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { fetchSpotifySongSuggestions } from '@/lib/spotify';
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
 import { useEffect, useState } from 'react';
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
+
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
     if (searchQuery) {
       fetchSongSuggestions(searchQuery);
     }
-  }, [searchQuery]);
+  }, [debouncedQuery]);
 
   const fetchSongSuggestions = async (query: string) => {
     try {
@@ -36,16 +39,21 @@ export default function Page() {
           value={searchQuery}
           onChange={handleSearchChange}
         />
-        <Button type="submit">Submit song!</Button>
         {suggestions.length > 0 && (
           <ul className="mt-4">
             {suggestions.map((suggestion, index) => (
               <li key={index} className="p-2 border-b">
-                {suggestion}
+                {suggestion.name} by {suggestion.artist} 
+                <Button type="submit">Select this song!</Button>
+                <audio id="audio" controls>
+                  <source src={suggestion.previewUrl} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
               </li>
             ))}
           </ul>
         )}
+
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         {/* Footer content */}
