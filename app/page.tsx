@@ -4,34 +4,24 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { fetchSpotifySongSuggestions } from "@/lib/spotify";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   
-  const spotifyApi = SpotifyApi.withClientCredentials(
-    process.env.SPOTIFY_CLIENT!,
-    process.env.SPOTIFY_SECRET!
-  );
-
-  console.log(process.env.SPOTIFY_CLIENT);
 
   useEffect(() => {
     if (searchQuery) {
-      fetchSpotifySuggestions(searchQuery);
+      fetchSongSuggestions(searchQuery);
     }
   }, [searchQuery]);
 
-  const fetchSpotifySuggestions = async (query: string) => {
+  const fetchSongSuggestions = async (query: string) => {
     try {
-      const response = await spotifyApi.search(query, ["track"]); // add limit of 5
-      const tracks = response.tracks.items.map((item) => item.name);
-      setSuggestions(tracks);
+      const songs = await fetchSpotifySongSuggestions(query);
+      setSuggestions(songs);
     } catch (error) {
       console.error("Error fetching Spotify suggestions:", error);
     }
