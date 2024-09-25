@@ -1,6 +1,4 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import dotenv from "dotenv";
-dotenv.config();
 
 const spotifyApi = SpotifyApi.withClientCredentials(
     process.env.SPOTIFY_CLIENT!,

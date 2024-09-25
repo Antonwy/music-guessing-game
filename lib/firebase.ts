@@ -5,12 +5,12 @@ import { initializeApp } from 'firebase/app';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyDEkZoBVr5tKKftdXy4d975Sv-HkfP0e2Y',
-  authDomain: 'music-guessing-game-5a342.firebaseapp.com',
-  projectId: 'music-guessing-game-5a342',
-  storageBucket: 'music-guessing-game-5a342.appspot.com',
-  messagingSenderId: '983527341422',
-  appId: '1:983527341422:web:2f2efa5c78c2c2b948957f',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
