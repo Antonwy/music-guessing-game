@@ -1,16 +1,13 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { fetchSpotifySongSuggestions } from "@/lib/spotify";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { fetchSpotifySongSuggestions } from '@/lib/spotify';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-
-  
 
   useEffect(() => {
     if (searchQuery) {
@@ -23,7 +20,7 @@ export default function Home() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error("Error fetching Spotify suggestions:", error);
+      console.error('Error fetching Spotify suggestions:', error);
     }
   };
 
