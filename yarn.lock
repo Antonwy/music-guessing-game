@@ -215,7 +215,7 @@
   resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-3.0.2.tgz#75c301acc5fa33943eaaa9570b963c55398cad2a"
   integrity sha512-wp1A+t5rI2Qc/2q7r2ZpjUXkRVPtGMd6zCLsiWurjsQpqPgFin3AhNibKcIzoF2rnToNa/XYtyWXuifjOOwDgg==
 
-"@firebase/firestore@4.7.2":
+"@firebase/firestore@4.7.2", "@firebase/firestore@^4.7.2":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@firebase/firestore/-/firestore-4.7.2.tgz#7fa7f6aaa844b53695daaf509da274b945372f65"
   integrity sha512-WPkL/DEHuJg1PZPyHn81pNUhitG+7WkpLVdXmoYB23Za3eoM8VzuIn7zcD4Cji6wDCGA6eI1rvGYLtsXmE1OaQ==
