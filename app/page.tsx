@@ -1,58 +1,12 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { fetchSpotifySongSuggestions } from "@/lib/spotify";
+import { Button } from '@/components/ui/button';
 
-export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-
-  
-
-  useEffect(() => {
-    if (searchQuery) {
-      fetchSongSuggestions(searchQuery);
-    }
-  }, [searchQuery]);
-
-  const fetchSongSuggestions = async (query: string) => {
-    try {
-      const songs = await fetchSpotifySongSuggestions(query);
-      setSuggestions(songs);
-    } catch (error) {
-      console.error("Error fetching Spotify suggestions:", error);
-    }
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
+export default function Page() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Input
-          placeholder="Search for your song..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <Button type="submit">Submit song!</Button>
-        {suggestions.length > 0 && (
-          <ul className="mt-4">
-            {suggestions.map((suggestion, index) => (
-              <li key={index} className="p-2 border-b">
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        {/* Footer content */}
-      </footer>
-    </div>
+    <section className="p-4 flex gap-2 flex-col">
+      <h1 className="text-lg font-bold">Join Room</h1>
+      <Button onClick={() => {}}>Create Room</Button>
+    </section>
   );
 }
