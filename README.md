@@ -34,3 +34,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## TODOs Layout
+
+Start page
+- create session -> should redirect to session manager page and create session in backend.
+- join existing session. ask for session code and name and then redirect to player page.
+
+Session manager page
+- show the session code
+- config options
+    - hidden song cover and title
+    - round timer length
+- game progression buttons
+    - option to enter title of rounds (main character, sad song, love song, etc)
+    - progress to next song
+    - begin next round with timer
+
+Player page
+- when thinking of song
+    - search bar for spotify and submit button
+    - timer for the round
+- when playing songs
+    - song number
+    - song information (if config allowed for)
