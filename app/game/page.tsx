@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
 import { useEffect, useState } from 'react';
 import { useDebounce } from "@uidotdev/usehooks";
+import Image from 'next/image';
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,13 +43,16 @@ export default function Page() {
         {suggestions.length > 0 && (
           <ul className="mt-4">
             {suggestions.map((suggestion, index) => (
-              <li key={index} className="p-2 border-b">
-                {suggestion.name} by {suggestion.artist} 
-                <Button type="submit">Select this song!</Button>
-                <audio id="audio" controls>
-                  <source src={suggestion.previewUrl} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
+              <li key={index} className="p-2 border-b flex items-center gap-4">
+                <Image src={suggestion.thumbnailUrl} alt={`${suggestion.name} thumbnail`} width={64} height={64} className="object-cover" />
+                <div>
+                  {suggestion.name} by {suggestion.artist} 
+                  <Button type="submit">Select this song!</Button>
+                  <audio id="audio" controls>
+                    <source src={suggestion.previewUrl} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
               </li>
             ))}
           </ul>
