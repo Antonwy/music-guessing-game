@@ -44,7 +44,7 @@ export default function Page() {
           <ul className="mt-4">
             {suggestions.map((suggestion, index) => (
               <li key={index} className="p-2 border-b flex items-center gap-4">
-                <Image src={suggestion.thumbnailUrl} alt={`${suggestion.name} thumbnail`} width={64} height={64} className="object-cover" />
+                <Image src={suggestion.thumbnailUrl} alt={`${suggestion.name} thumbnail`} width={64} height={64} className="object-cover rounded-md" />
                 <div>
                   {suggestion.name} by {suggestion.artist} 
                   <Button type="submit">Select this song!</Button>
