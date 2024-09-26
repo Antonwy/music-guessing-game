@@ -2730,6 +2730,11 @@ protobufjs@^7.2.5:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
 
+proxy-compare@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-3.0.0.tgz#d99d719393c2fa1f1f29e4ba9e120b46bbcbc1fc"
+  integrity sha512-y44MCkgtZUCT9tZGuE278fB7PWVf7fRYy0vbRXAts2o5F0EfC4fIQrvQQGBJo1WJbFcVLXzApOscyJuZqHQc1w==
+
 punycode@^2.1.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
@@ -3294,6 +3299,13 @@ util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+valtio@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-2.0.0.tgz#781ef4dd6a3ddd9edb1af0267503e0ee7fe6ccd2"
+  integrity sha512-SzUU5UUK/vBRfHWXihwkJE55YNj8zhOkzxPOexcz0xIIT6Oux5VLynCmzyME2bYuEWcktW2NTaaLbpUydEsHiw==
+  dependencies:
+    proxy-compare "^3.0.0"
 
 websocket-driver@>=0.5.1:
   version "0.7.4"
