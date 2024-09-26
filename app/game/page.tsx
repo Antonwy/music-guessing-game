@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,23 +8,30 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
-import { state } from '@/lib/state';
-import { useDebounce } from '@uidotdev/usehooks';
-import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
-import Image from 'next/image';
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { useSnapshot } from 'valtio';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
+import { state } from "@/lib/state";
+import { useDebounce } from "@uidotdev/usehooks";
+import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
+import Image from "next/image";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { useSnapshot } from "valtio";
 
 type SuggestionProps = {
   suggestion: SpotifyTrackDetail;
   index: number;
+  onSelect: (suggestion: SpotifyTrackDetail) => void;
+  isSelected: boolean;
 };
 
 // Define the Suggestion component
-const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
+const Suggestion: FC<SuggestionProps> = ({
+  suggestion,
+  index,
+  onSelect,
+  isSelected,
+}) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -34,14 +41,14 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener('play', handlePlay);
-      audioElement.addEventListener('pause', handlePause);
+      audioElement.addEventListener("play", handlePlay);
+      audioElement.addEventListener("pause", handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener('play', handlePlay);
-        audioElement.removeEventListener('pause', handlePause);
+        audioElement.removeEventListener("play", handlePlay);
+        audioElement.removeEventListener("pause", handlePause);
       }
     };
   }, []);
@@ -56,10 +63,13 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
     }
   };
 
-  const isPlayable = suggestion.previewUrl != '';
+  const isPlayable = suggestion.previewUrl != "";
 
   return (
-    <li key={index} className="p-2 border-b">
+    <li
+      key={index}
+      className={`p-2 border-b ${isSelected ? "bg-blue-100" : ""}`}
+    >
       <div className="flex items-center space-x-4">
         <Button
           asChild
@@ -77,14 +87,14 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
             />
             <div
               className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? 'hidden' : ''
+                isPlayable ? "hidden" : ""
               }`}
             >
               <XIcon className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? 'hidden' : ''
+                !isPlayable ? "hidden" : ""
               }`}
             >
               {!isPlaying ? (
@@ -101,6 +111,7 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
           </p>
           <p className="truncate w-[450px]">{suggestion.artist}</p>
         </div>
+        <Button onClick={() => onSelect(suggestion)}>Select</Button>
         <audio ref={audioRef} controls className="hidden">
           <source src={suggestion.previewUrl} type="audio/mpeg" />
           Your browser does not support the audio element.
@@ -111,11 +122,19 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
 };
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
   const { username, room } = useSnapshot(state);
+  const [selectedSong, setSelectedSong] = useState<SpotifyTrackDetail | null>(
+    null
+  );
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const debouncedQuery = useDebounce(searchQuery, 500);
+
+  const handleSelectSong = (song: SpotifyTrackDetail) => {
+    setSelectedSong(song);
+  };
 
   useEffect(() => {
     if (searchQuery) {
@@ -128,7 +147,7 @@ export default function Page() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error('Error fetching Spotify suggestions:', error);
+      console.error("Error fetching Spotify suggestions:", error);
     }
   };
 
@@ -136,25 +155,40 @@ export default function Page() {
     setSearchQuery(event.target.value);
   };
 
-  const selectSong = () => {
+  const submitSong = () => {
     // Add logic to send the selected song to the server
     // and navigate to the next page
+    console.log("Selected song:", selectedSong);
+    setIsSubmitted(true);
   };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Card>
-          <CardHeader>
-            <CardTitle>Select a song!</CardTitle>
-            <div className="flex flex-col text-xs pb-2">
+        {isSubmitted ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Song Submitted!</CardTitle>
+            </CardHeader>
+            <CardContent>
               <p>
-                Room: <span className="font-semibold">{room}</span>
+                Your song has been submitted. Please wait for the next step.
               </p>
-              <p>
-                Username: <span className="font-semibold">{username}</span>
-              </p>
-            </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Select a song!</CardTitle>
+              <div className="flex flex-col text-xs pb-2">
+                <p>
+                  Room: <span className="font-semibold">{room}</span>
+                </p>
+                <p>
+                  Username: <span className="font-semibold">{username}</span>
+                </p>
+              </div>
+            </CardHeader>
             <CardDescription>
               <Input
                 placeholder="Search for your song..."
@@ -162,29 +196,34 @@ export default function Page() {
                 onChange={handleSearchChange}
               />
             </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {suggestions.length > 0 && (
-              <ul className="mt-4">
-                {suggestions.map((suggestion, index) => (
-                  <Suggestion
-                    key={suggestion.songID}
-                    suggestion={suggestion}
-                    index={index}
-                  />
-                ))}
-              </ul>
-            )}
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" onClick={selectSong}>
-              Submit this song!
-            </Button>
-          </CardFooter>
-        </Card>
+            <CardContent>
+              {suggestions.length > 0 && (
+                <ul className="mt-4">
+                  {suggestions.map((suggestion, index) => (
+                    <Suggestion
+                      key={suggestion.songId}
+                      suggestion={suggestion}
+                      index={index}
+                      onSelect={handleSelectSong}
+                      isSelected={
+                        !!selectedSong &&
+                        selectedSong.songId === suggestion.songId
+                      }
+                    />
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" onClick={submitSong}>
+                Submit selected song
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        {/* Footer content */}
+        you have x minutes remaining
       </footer>
     </div>
   );
