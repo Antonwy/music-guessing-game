@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { joinRoom } from '@/lib/rooms';
 import { ChangeEventHandler, useState } from 'react';
+import Link from 'next/link';
 
 export default function Page() {
   const [inputState, setInputState] = useState({ username: '', roomCode: '' });
@@ -41,6 +42,9 @@ export default function Page() {
       />
       <Button onClick={handleJoinRoomClick}>Join Room</Button>
       {error && <div className="text-red-500">{error}</div>}
+      <Link href="/rooms">
+        <Button>View Available Rooms</Button>
+      </Link>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import { doc, setDoc } from '@firebase/firestore';
+import { doc, setDoc, collection, getDocs } from '@firebase/firestore';
 import db from './firestore';
 
 function generateRandomCode() {
@@ -28,6 +28,18 @@ export async function joinRoom(roomCode: string, playerId: string) {
     await setDoc(doc(db, 'rooms', roomCode, 'players', `${playerId}`), {
       state: 'test',
     });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function listRooms() {
+  console.log('Listing all rooms');
+
+  try {
+    const roomsSnapshot = await getDocs(collection(db, 'rooms'));
+    const rooms = roomsSnapshot.docs.map(doc => doc.id);
+    return rooms;
   } catch (e) {
     console.error(e);
   }
