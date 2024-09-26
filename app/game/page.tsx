@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,14 +8,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { PlayIcon, PauseIcon, XIcon } from "lucide-react";
-import Image from "next/image";
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
-import { FC, useEffect, useState } from "react";
-import { useDebounce } from "@uidotdev/usehooks";
-import React from "react";
-import { useRef } from "react";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
+import { state } from '@/lib/state';
+import { useDebounce } from '@uidotdev/usehooks';
+import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
+import Image from 'next/image';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 type SuggestionProps = {
   suggestion: SpotifyTrackDetail;
@@ -34,14 +34,14 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener("play", handlePlay);
-      audioElement.addEventListener("pause", handlePause);
+      audioElement.addEventListener('play', handlePlay);
+      audioElement.addEventListener('pause', handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener("play", handlePlay);
-        audioElement.removeEventListener("pause", handlePause);
+        audioElement.removeEventListener('play', handlePlay);
+        audioElement.removeEventListener('pause', handlePause);
       }
     };
   }, []);
@@ -56,7 +56,7 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
     }
   };
 
-  const isPlayable = suggestion.previewUrl != "";
+  const isPlayable = suggestion.previewUrl != '';
 
   return (
     <li key={index} className="p-2 border-b">
@@ -77,14 +77,14 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
             />
             <div
               className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? "hidden" : ""
+                isPlayable ? 'hidden' : ''
               }`}
             >
               <XIcon className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? "hidden" : ""
+                !isPlayable ? 'hidden' : ''
               }`}
             >
               {!isPlaying ? (
@@ -111,8 +111,9 @@ const Suggestion: FC<SuggestionProps> = ({ suggestion, index }) => {
 };
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
+  const { username, room } = useSnapshot(state);
 
   const debouncedQuery = useDebounce(searchQuery, 500);
 
@@ -127,7 +128,7 @@ export default function Page() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error("Error fetching Spotify suggestions:", error);
+      console.error('Error fetching Spotify suggestions:', error);
     }
   };
 
@@ -146,6 +147,14 @@ export default function Page() {
         <Card>
           <CardHeader>
             <CardTitle>Select a song!</CardTitle>
+            <div className="flex flex-col text-xs pb-2">
+              <p>
+                Room: <span className="font-semibold">{room}</span>
+              </p>
+              <p>
+                Username: <span className="font-semibold">{username}</span>
+              </p>
+            </div>
             <CardDescription>
               <Input
                 placeholder="Search for your song..."

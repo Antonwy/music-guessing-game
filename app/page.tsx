@@ -3,11 +3,16 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { joinRoom } from '@/lib/rooms';
+import { state } from '@/lib/state';
+import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function Page() {
   const [inputState, setInputState] = useState({ username: '', roomCode: '' });
   const [error, setError] = useState('');
+  const { register } = useSnapshot(state);
+  const router = useRouter();
 
   const handleInputChange =
     (type: keyof typeof inputState): ChangeEventHandler<HTMLInputElement> =>
@@ -23,6 +28,12 @@ export default function Page() {
     }
 
     await joinRoom(inputState.roomCode, inputState.username);
+
+    register(inputState.username, inputState.roomCode);
+
+    // Redirect to the room page
+
+    router.push('/game');
   };
 
   return (
