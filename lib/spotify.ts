@@ -13,6 +13,7 @@ export const fetchSpotifySongSuggestions = async (query: string): Promise<Spotif
     artist: item.artists.map((artist) => artist.name).join(', '),
     previewUrl: item.preview_url ?? "",
     thumbnailUrl: item.album.images[0]?.url ?? "",
+    songID: item.id,
   }));
   return trackDetails;
 };
@@ -22,4 +23,5 @@ export type SpotifyTrackDetail = {
   artist: string;
   previewUrl: string;
   thumbnailUrl: string;
+  songID: string;
 }; 
