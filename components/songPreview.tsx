@@ -10,7 +10,7 @@ type SongPreviewProps = {
   hidden: boolean;
 };
 
-const SongPreview: FC<SongPreviewProps> = ({ song, index, user, hidden }) => {
+const SongPreview: FC<SongPreviewProps> = ({ song, index, hidden }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 

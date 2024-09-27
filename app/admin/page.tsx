@@ -17,11 +17,8 @@ import { createRoom, startRound, useUsersOfRoom } from "@/lib/rooms";
 import { useSongsOfRound } from "@/lib/songs";
 import { useSnapshot } from "valtio";
 import { mainStyles, wrapperDivStyles } from "../styles";
-import { SpotifyTrackDetail } from "@/lib/spotify";
 import { state } from "@/lib/state";
-import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
-import Image from "next/image";
-import { FC, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 export default function Page() {
