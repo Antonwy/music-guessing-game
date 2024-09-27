@@ -1,31 +1,32 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { createRoom, startRound } from "@/lib/rooms";
-import { useSongsOfRound } from "@/lib/songs";
-import { SpotifyTrackDetail } from "@/lib/spotify";
-import { state } from "@/lib/state";
-import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
-import Image from "next/image";
-import { FC, useEffect, useRef, useState } from "react";
-import { useSnapshot } from "valtio";
-import { mainStyles, wrapperDivStyles } from "../styles";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { createRoom, startRound } from '@/lib/rooms';
+import { useSongsOfRound } from '@/lib/songs';
+import { SpotifyTrackDetail } from '@/lib/spotify';
+import { state } from '@/lib/state';
+import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
+import Image from 'next/image';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { mainStyles, wrapperDivStyles } from '../styles';
 
 export default function Page() {
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState('');
   const { topic: submittedTopic, room } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
 
-  console.log("Songs:", songs);
+  console.log('Songs:', songs);
 
   const handleCreateRoomClick = async () => {
     const roomCode = await createRoom();
@@ -46,7 +47,7 @@ export default function Page() {
       return;
     }
 
-    console.log("Starting new round with topic:", topic);
+    console.log('Starting new round with topic:', topic);
 
     startRound(room!, topic);
     state.setTopic(topic);
@@ -58,12 +59,12 @@ export default function Page() {
         <Card>
           <CardHeader>
             <CardTitle>Create a room</CardTitle>
+            <CardDescription>
+              Create a new room for the music guessing game and share this room
+              code with friends.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            Create a new room for the music guessing game and share this room
-            code with friends.
-            {room && <div>Room Code: {room}</div>}
-          </CardContent>
+          {room && <CardContent>Room Code: {room}</CardContent>}
           <CardFooter>
             <Button onClick={handleCreateRoomClick}>Create Room</Button>
           </CardFooter>
@@ -73,21 +74,23 @@ export default function Page() {
           <Card>
             <CardHeader>
               <CardTitle>Begin the next round</CardTitle>
+              <CardDescription>
+                <p>
+                  Start the next round of the game by entering a new topic for
+                  music and clicking &quot;Begin round&quot;.
+                </p>
+                <p>
+                  Topics could be anything from &quot;Main Character Vibes&quot;
+                  to &quot;Love Song&quot; to &quot;Looking out the window
+                  during a train ride&quot;. Be creative!
+                </p>
+                <p>
+                  Be careful this will end the current round and all already
+                  submitted songs.
+                </p>
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>
-                Start the next round of the game by entering a new topic for
-                music and clicking &quot;Begin round&quot;.
-              </p>
-              <p>
-                Topics could be anything from &quot;Main Character Vibes&quot;
-                to &quot;Love Song&quot; to &quot;Looking out the window during
-                a train ride&quot;. Be creative!
-              </p>
-              <p>
-                Be careful this will end the current round and all already
-                submitted songs.
-              </p>
               <Input
                 placeholder="Topic for the songs"
                 value={topic}
@@ -96,7 +99,7 @@ export default function Page() {
             </CardContent>
             <CardFooter>
               <Button onClick={handleNewRoundClick}>
-                Begin round {topic ? `"${topic}"` : ""}
+                Begin round {topic ? `"${topic}"` : ''}
               </Button>
             </CardFooter>
           </Card>
@@ -108,13 +111,16 @@ export default function Page() {
               <CardTitle>
                 Submitted Songs for Round &quot;{submittedTopic}&quot;
               </CardTitle>
+              <CardDescription>
+                Below you will find a list of submitted songs for the topic{' '}
+                <span className="font-semibold">
+                  &quot;
+                  {submittedTopic}&quot;
+                </span>
+                .
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>
-                Below you will find a list of submitted songs for the topic
-                &quot;
-                {submittedTopic}&quot;.
-              </p>
               <ul>
                 {songs.map((song, index) => (
                   <SongPreview
@@ -149,14 +155,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener("play", handlePlay);
-      audioElement.addEventListener("pause", handlePause);
+      audioElement.addEventListener('play', handlePlay);
+      audioElement.addEventListener('pause', handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener("play", handlePlay);
-        audioElement.removeEventListener("pause", handlePause);
+        audioElement.removeEventListener('play', handlePlay);
+        audioElement.removeEventListener('pause', handlePause);
       }
     };
   }, []);
@@ -171,7 +177,7 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
     }
   };
 
-  const isPlayable = song.previewUrl != "";
+  const isPlayable = song.previewUrl != '';
 
   return (
     <li key={index} className={`p-2 border-b`}>
@@ -192,14 +198,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
             />
             <div
               className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? "hidden" : ""
+                isPlayable ? 'hidden' : ''
               }`}
             >
               <XIcon className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? "hidden" : ""
+                !isPlayable ? 'hidden' : ''
               }`}
             >
               {!isPlaying ? (

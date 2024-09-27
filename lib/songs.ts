@@ -13,7 +13,8 @@ import { useEffect, useState } from 'react';
 export const submitSong = async (
   song: SpotifyTrackDetail,
   roomCode: string,
-  round: string
+  round: string,
+  username: string
 ) => {
   console.log('Submit song:', song, 'to room:', roomCode);
   // Add logic to send the selected song to the server
@@ -22,6 +23,7 @@ export const submitSong = async (
   await setDoc(doc(db, 'rooms', roomCode, 'songs', song.songId), {
     ...song,
     round,
+    username,
   });
 };
 
