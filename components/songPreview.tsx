@@ -45,7 +45,7 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
 
   return (
     <li key={index} className={`p-2 border-b`}>
-      <div className="flex items-center space-x-4">
+      <div className="flex gap-2 items-center">
         <Button
           asChild
           variant="ghost"
@@ -80,11 +80,11 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
             </div>
           </div>
         </Button>
-        <div className="space-y-2">
-          <p className="truncate w-[500px] text-xl font-semibold">
-            {song.name}
-          </p>
-          <p className="truncate w-[450px]">{song.artist}</p>
+        <div className="flex-grow">
+          <div className="max-w-36 sm:max-w-full">
+            <p className="truncate text-xl font-semibold">{song.name}</p>
+            <p className="truncate">{song.artist}</p>
+          </div>
         </div>
         <audio ref={audioRef} controls className="hidden">
           <source src={song.previewUrl} type="audio/mpeg" />
