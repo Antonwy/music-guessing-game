@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Suggestion from '@/components/suggestion';
-import { Button } from '@/components/ui/button';
+import Suggestion from "@/components/suggestion";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,18 +9,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useCurrentRoom } from '@/lib/rooms';
-import { submitSong } from '@/lib/songs';
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
-import { state } from '@/lib/state';
-import { useDebounce } from '@uidotdev/usehooks';
-import React, { useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useCurrentRoom } from "@/lib/rooms";
+import { submitSong } from "@/lib/songs";
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
+import { state } from "@/lib/state";
+import { useDebounce } from "@uidotdev/usehooks";
+import React, { useEffect, useState } from "react";
+import { useSnapshot } from "valtio";
+import { mainStyles, wrapperDivStyles } from "../styles";
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
   const { username, room } = useSnapshot(state);
   const [selectedSong, setSelectedSong] = useState<SpotifyTrackDetail | null>(
@@ -55,7 +56,7 @@ export default function Page() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error('Error fetching Spotify suggestions:', error);
+      console.error("Error fetching Spotify suggestions:", error);
     }
   };
 
@@ -70,14 +71,14 @@ export default function Page() {
 
     // Add logic to send the selected song to the server
     // and navigate to the next page
-    console.log('Selected song:', selectedSong);
+    console.log("Selected song:", selectedSong);
     submitSong(selectedSong!, roomData!.code, roomData!.round);
     setIsSubmitted(true);
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className={wrapperDivStyles}>
+      <main className={mainStyles}>
         <Card>
           <CardHeader>
             <CardTitle>
@@ -148,7 +149,7 @@ export default function Page() {
         )}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        you have x minutes remaining
+        A small project by Anton &amp; Leon, as a gift for Pauline!
       </footer>
     </div>
   );
