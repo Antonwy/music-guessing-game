@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { createRoom, startRound } from "@/lib/rooms";
-import { useSongsOfRound } from "@/lib/songs";
-import { SpotifyTrackDetail } from "@/lib/spotify";
-import { state } from "@/lib/state";
-import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
-import { FC, useEffect, useRef, useState } from "react";
-import { useSnapshot } from "valtio";
-import Image from "next/image";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { createRoom, startRound } from '@/lib/rooms';
+import { useSongsOfRound } from '@/lib/songs';
+import { SpotifyTrackDetail } from '@/lib/spotify';
+import { state } from '@/lib/state';
+import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
+import Image from 'next/image';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function Page() {
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState('');
   const { topic: submittedTopic, room } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
 
-  console.log("Songs:", songs);
+  console.log('Songs:', songs);
 
   const handleCreateRoomClick = async () => {
     const roomCode = await createRoom();
@@ -45,7 +45,7 @@ export default function Page() {
       return;
     }
 
-    console.log("Starting new round with topic:", topic);
+    console.log('Starting new round with topic:', topic);
 
     startRound(room!, topic);
     state.setTopic(topic);
@@ -96,13 +96,13 @@ export default function Page() {
           </CardContent>
           <CardFooter>
             <Button onClick={handleNewRoundClick}>
-              Begin round &quot;{topic}&quot;
+              Begin round {topic ? `"${topic}"` : ''}
             </Button>
           </CardFooter>
         </Card>
       )}
 
-      {topic && (
+      {submittedTopic && (
         <Card>
           <CardHeader>
             <CardTitle>
@@ -147,14 +147,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, user }) => {
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener("play", handlePlay);
-      audioElement.addEventListener("pause", handlePause);
+      audioElement.addEventListener('play', handlePlay);
+      audioElement.addEventListener('pause', handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener("play", handlePlay);
-        audioElement.removeEventListener("pause", handlePause);
+        audioElement.removeEventListener('play', handlePlay);
+        audioElement.removeEventListener('pause', handlePause);
       }
     };
   }, []);
@@ -169,7 +169,7 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, user }) => {
     }
   };
 
-  const isPlayable = song.previewUrl != "";
+  const isPlayable = song.previewUrl != '';
 
   return (
     <li key={index} className={`p-2 border-b`}>
@@ -190,14 +190,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, user }) => {
             />
             <div
               className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? "hidden" : ""
+                isPlayable ? 'hidden' : ''
               }`}
             >
               <XIcon className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? "hidden" : ""
+                !isPlayable ? 'hidden' : ''
               }`}
             >
               {!isPlaying ? (
