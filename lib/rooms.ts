@@ -36,6 +36,18 @@ export async function joinRoom(roomCode: string, playerId: string) {
   }
 }
 
+export async function startRound(roomCode: string, round: string) {
+  console.log(`Start round ${round} in room ${roomCode}`);
+
+  try {
+    await setDoc(doc(db, 'rooms', roomCode), {
+      round,
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 type Room = {
   round: string;
   code: string;

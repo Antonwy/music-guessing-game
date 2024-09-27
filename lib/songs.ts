@@ -1,6 +1,14 @@
-import { doc, setDoc } from '@firebase/firestore';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from '@firebase/firestore';
 import { SpotifyTrackDetail } from './spotify';
 import db from './firestore';
+import { useEffect, useState } from 'react';
 
 export const submitSong = async (
   song: SpotifyTrackDetail,
@@ -15,4 +23,40 @@ export const submitSong = async (
     ...song,
     round,
   });
+};
+
+export const useSongsOfRound = (roomCode?: string, round?: string) => {
+  const [songs, setSongs] = useState<SpotifyTrackDetail[]>([]);
+
+  useEffect(() => {
+    if (!roomCode || !round) {
+      return;
+    }
+
+    const q = query(
+      collection(db, 'rooms', roomCode, 'songs'),
+      where('round', '==', round)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      console.log('Songs snapshot:', snapshot.docs);
+
+      setSongs(
+        snapshot.docs.map((doc) => {
+          const data = doc.data();
+
+          return {
+            songId: doc.id,
+            ...data,
+          } as SpotifyTrackDetail;
+        })
+      );
+
+      console.log('Songs:', songs);
+    });
+
+    return unsubscribe;
+  }, [roomCode, round]);
+
+  return songs;
 };
