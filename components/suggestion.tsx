@@ -97,7 +97,11 @@ const Suggestion: FC<SuggestionProps> = ({
           </p>
           <p className="truncate w-[450px]">{suggestion.artist}</p>
         </div>
-        <Button onClick={() => onSelect(suggestion)} disabled={!isPlayable}>
+        <Button
+          onClick={() => onSelect(suggestion)}
+          disabled={!isPlayable}
+          variant={isSelected ? "default" : "secondary"}
+        >
           Select
         </Button>
         <audio ref={audioRef} controls className="hidden">
