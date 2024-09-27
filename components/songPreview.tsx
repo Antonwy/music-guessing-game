@@ -1,5 +1,5 @@
 import { SpotifyTrackDetail } from "@/lib/spotify";
-import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
+import { PauseIcon, PlayIcon, SquareArrowOutUpRight } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 
@@ -33,6 +33,10 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, hidden }) => {
   }, []);
 
   const handlePlayPause = () => {
+    if (!isPlayable) {
+      window.open(`https://open.spotify.com/track/${song.songId}`, "_blank");
+      return;
+    }
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
@@ -72,7 +76,7 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, hidden }) => {
                 isPlayable ? "hidden" : ""
               }`}
             >
-              <XIcon className="w-8 h-8 text-white" />
+              <SquareArrowOutUpRight className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
