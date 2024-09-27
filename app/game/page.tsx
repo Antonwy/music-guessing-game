@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Suggestion from "@/components/suggestion";
-import { Button } from "@/components/ui/button";
+import Suggestion from '@/components/suggestion';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,18 +9,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
-import { state } from "@/lib/state";
-import { useDebounce } from "@uidotdev/usehooks";
-import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
-import Image from "next/image";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { useSnapshot } from "valtio";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { useCurrentRoom } from '@/lib/rooms';
+import { submitSong } from '@/lib/songs';
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
+import { state } from '@/lib/state';
+import { useDebounce } from '@uidotdev/usehooks';
+import React, { useEffect, useState } from 'react';
+import { useSnapshot } from 'valtio';
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
   const { username, room } = useSnapshot(state);
   const [selectedSong, setSelectedSong] = useState<SpotifyTrackDetail | null>(
@@ -29,6 +29,8 @@ export default function Page() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const debouncedQuery = useDebounce(searchQuery, 500);
+
+  const roomData = useCurrentRoom();
 
   const handleSelectSong = (song: SpotifyTrackDetail) => {
     setSelectedSong(song);
@@ -45,7 +47,7 @@ export default function Page() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error("Error fetching Spotify suggestions:", error);
+      console.error('Error fetching Spotify suggestions:', error);
     }
   };
 
@@ -53,10 +55,15 @@ export default function Page() {
     setSearchQuery(event.target.value);
   };
 
-  const submitSong = () => {
+  const handleSubmitSongClick = async () => {
+    if (!roomData?.code || !selectedSong) {
+      return;
+    }
+
     // Add logic to send the selected song to the server
     // and navigate to the next page
-    console.log("Selected song:", selectedSong);
+    console.log('Selected song:', selectedSong);
+    submitSong(selectedSong!, roomData!.code, roomData!.round);
     setIsSubmitted(true);
   };
 
@@ -84,6 +91,12 @@ export default function Page() {
                 </p>
                 <p>
                   Username: <span className="font-semibold">{username}</span>
+                </p>
+                <p>
+                  Topic:{' '}
+                  <span className="font-semibold">
+                    {roomData?.round ?? 'No round started'}
+                  </span>
                 </p>
               </div>
             </CardHeader>
@@ -113,7 +126,7 @@ export default function Page() {
               )}
             </CardContent>
             <CardFooter>
-              <Button type="submit" onClick={submitSong}>
+              <Button type="submit" onClick={handleSubmitSongClick}>
                 Submit selected song
               </Button>
             </CardFooter>
