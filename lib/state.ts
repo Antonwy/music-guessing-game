@@ -1,3 +1,5 @@
+'use client';
+
 import { proxy, subscribe } from 'valtio';
 
 const statePersistenceKey = 'state';
@@ -11,8 +13,19 @@ type State = {
   setRoom(room: string): void;
 };
 
+const safeLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage;
+  }
+
+  return {
+    getItem: () => null,
+    setItem: () => null,
+  };
+};
+
 export const state = proxy<State>({
-  ...(JSON.parse(localStorage.getItem(statePersistenceKey) ?? '{}') ?? {
+  ...(JSON.parse(safeLocalStorage().getItem(statePersistenceKey) ?? '{}') ?? {
     room: undefined,
     username: undefined,
     topic: undefined,
@@ -30,5 +43,5 @@ export const state = proxy<State>({
 });
 
 subscribe(state, () => {
-  localStorage.setItem(statePersistenceKey, JSON.stringify(state));
+  safeLocalStorage().setItem(statePersistenceKey, JSON.stringify(state));
 });

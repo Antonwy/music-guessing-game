@@ -57,22 +57,20 @@ export function useCurrentRoom() {
   const { room } = useSnapshot(state);
   const [roomData, setRoomData] = useState<Room | null>(null);
 
-  if (!room) {
-    throw new Error('Room not found');
-  }
+  useEffect(() => {
+    if (!room) {
+      return;
+    }
 
-  useEffect(
-    () =>
-      onSnapshot(doc(db, 'rooms', room), (doc) => {
-        if (doc.exists()) {
-          setRoomData({
-            ...(doc.data() as Room),
-            code: doc.id,
-          });
-        }
-      }),
-    [room]
-  );
+    return onSnapshot(doc(db, 'rooms', room), (doc) => {
+      if (doc.exists()) {
+        setRoomData({
+          ...(doc.data() as Room),
+          code: doc.id,
+        });
+      }
+    });
+  }, [room]);
 
   return roomData;
 }
