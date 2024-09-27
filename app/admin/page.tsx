@@ -135,7 +135,7 @@ type SongPreviewProps = {
   user: string;
 };
 
-const SongPreview: FC<SongPreviewProps> = ({ song, index, user }) => {
+const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
