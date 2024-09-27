@@ -53,29 +53,24 @@ const Suggestion: FC<SuggestionProps> = ({
   return (
     <li
       key={index}
-      className={`p-2 border-b ${isSelected ? 'bg-blue-100' : ''}`}
+      className={`p-2 border-b ${isSelected ? 'bg-blue-100' : ''} w-full`}
     >
-      <div className="flex items-center space-x-4">
-        <Button
-          asChild
-          variant="ghost"
-          onClick={handlePlayPause}
-          className="p-0"
-        >
-          <div className="relative">
+      <div className="flex gap-2 items-center">
+        <Button asChild onClick={handlePlayPause} className="p-0">
+          <div className="relative size-9 rounded-full overflow-hidden">
             <img
               src={suggestion.thumbnailUrl}
               alt={`${suggestion.name} thumbnail`}
               width={48}
               height={48}
-              className="object-cover rounded-full"
+              className="object-cover"
             />
             <div
-              className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
+              className={`absolute bg-black bg-opacity-60 size-full flex items-center justify-center ${
                 isPlayable ? 'hidden' : ''
               }`}
             >
-              <XIcon className="w-8 h-8 text-white" />
+              <XIcon className="size-4 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
@@ -83,18 +78,18 @@ const Suggestion: FC<SuggestionProps> = ({
               }`}
             >
               {!isPlaying ? (
-                <PlayIcon className="w-8 h-8 text-white" />
+                <PlayIcon className="size-4 text-white" />
               ) : (
-                <PauseIcon className="w-8 h-8 text-white" />
+                <PauseIcon className="size-4 text-white" />
               )}
             </div>
           </div>
         </Button>
-        <div className="space-y-2">
-          <p className="truncate w-[500px] text-xl font-semibold">
-            {suggestion.name}
-          </p>
-          <p className="truncate w-[450px]">{suggestion.artist}</p>
+        <div className="flex-grow">
+          <div className="max-w-36 sm:max-w-full">
+            <p className="truncate text-xl font-semibold">{suggestion.name}</p>
+            <p className="truncate">{suggestion.artist}</p>
+          </div>
         </div>
         <Button
           onClick={() => onSelect(suggestion)}

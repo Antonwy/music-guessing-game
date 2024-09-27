@@ -144,7 +144,7 @@ export default function Page() {
           </Card>
         )}
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center text-center">
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center text-center p-8">
         A small project by Anton &amp; Leon, as a gift for Pauline!
       </footer>
     </div>
