@@ -18,3 +18,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MUSIC_GUESSING_GAME_5A342 }}'
           channelId: live
           projectId: music-guessing-game-5a342
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
