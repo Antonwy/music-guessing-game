@@ -39,8 +39,6 @@ export const useSongsOfRound = (roomCode?: string, round?: string) => {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      console.log('Songs snapshot:', snapshot.docs);
-
       setSongs(
         snapshot.docs.map((doc) => {
           const data = doc.data();
@@ -51,8 +49,6 @@ export const useSongsOfRound = (roomCode?: string, round?: string) => {
           } as SpotifyTrackDetail;
         })
       );
-
-      console.log('Songs:', songs);
     });
 
     return unsubscribe;

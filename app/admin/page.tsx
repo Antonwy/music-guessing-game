@@ -63,9 +63,7 @@ export default function Page() {
           {room && <div>Room Code: {room}</div>}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleCreateRoomClick} disabled={!!room}>
-            Create Room
-          </Button>
+          <Button onClick={handleCreateRoomClick}>Create Room</Button>
         </CardFooter>
       </Card>
 
