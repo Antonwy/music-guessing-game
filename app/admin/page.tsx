@@ -65,9 +65,7 @@ export default function Page() {
             {room && <div>Room Code: {room}</div>}
           </CardContent>
           <CardFooter>
-            <Button onClick={handleCreateRoomClick} disabled={!!room}>
-              Create Room
-            </Button>
+            <Button onClick={handleCreateRoomClick}>Create Room</Button>
           </CardFooter>
         </Card>
 
@@ -141,7 +139,7 @@ type SongPreviewProps = {
   user: string;
 };
 
-const SongPreview: FC<SongPreviewProps> = ({ song, index, user }) => {
+const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
