@@ -97,7 +97,9 @@ const Suggestion: FC<SuggestionProps> = ({
           </p>
           <p className="truncate w-[450px]">{suggestion.artist}</p>
         </div>
-        <Button onClick={() => onSelect(suggestion)}>Select</Button>
+        <Button onClick={() => onSelect(suggestion)} disabled={!isPlayable}>
+          Select
+        </Button>
         <audio ref={audioRef} controls className="hidden">
           <source src={suggestion.previewUrl} type="audio/mpeg" />
           Your browser does not support the audio element.

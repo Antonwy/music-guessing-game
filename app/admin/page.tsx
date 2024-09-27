@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { createRoom, startRound } from '@/lib/rooms';
-import { useSongsOfRound } from '@/lib/songs';
-import { state } from '@/lib/state';
-import { useState } from 'react';
-import { useSnapshot } from 'valtio';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { createRoom, startRound } from "@/lib/rooms";
+import { useSongsOfRound } from "@/lib/songs";
+import { state } from "@/lib/state";
+import { useState } from "react";
+import { useSnapshot } from "valtio";
 
 export default function Page() {
-  const [topic, setTopic] = useState('');
+  const [topic, setTopic] = useState("");
   const { topic: submittedTopic, room } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
 
-  console.log('Songs:', songs);
+  console.log("Songs:", songs);
 
   const handleCreateRoomClick = async () => {
     const roomCode = await createRoom();
@@ -42,10 +42,10 @@ export default function Page() {
       return;
     }
 
-    console.log('Starting new round with topic:', topic);
+    console.log("Starting new round with topic:", topic);
 
     startRound(room!, topic);
-    state.setTopic(topic);
+    setTopic(topic);
   };
 
   return (
@@ -66,58 +66,57 @@ export default function Page() {
         </CardFooter>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Begin the next round</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>
-            Start the next round of the game by entering a new topic for music
-            and clicking &quot;Begin round&quot;.
-          </p>
-          <p>
-            Topics could be anything from &quot;Main Character Vibes&quot; to
-            &quot;Love Song&quot; to &quot;Looking out the window during a train
-            ride&quot;. Be creative!
-          </p>
-          <p>
-            Be careful this will end the current round and all already submitted
-            songs.
-          </p>
-          <Input
-            placeholder="Topic for the songs"
-            value={topic}
-            onChange={handleTopicChange}
-          />
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handleNewRoundClick}>
-            Begin round {topic ? `"${topic}"` : ''}
-          </Button>
-        </CardFooter>
-      </Card>
+      {room && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Begin the next round</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>
+              Start the next round of the game by entering a new topic for music
+              and clicking "Begin round".
+            </p>
+            <p>
+              Topics could be anything from "Main Character Vibes" to "Love
+              Song" to "Looking out the window during a train ride". Be
+              creative!
+            </p>
+            <p>
+              Be careful this will end the current round and all already
+              submitted songs.
+            </p>
+            <Input
+              placeholder="Topic for the songs"
+              value={topic}
+              onChange={handleTopicChange}
+            />
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleNewRoundClick}>Begin round "{topic}"</Button>
+          </CardFooter>
+        </Card>
+      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Submitted Songs for Round &quot;{submittedTopic}&quot;
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>
-            Below you will find a list of submitted songs for the topic &quot;
-            {submittedTopic}
-            &quot;.
-          </p>
-          <ul>
-            {songs.map((song) => (
-              <li key={song.songId}>
-                {song.name} by {song.artist}
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+      {topic && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Submitted Songs for Round "{topic}"</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>
+              Below you will find a list of submitted songs for the topic "
+              {topic}".
+            </p>
+            <ul>
+              {songs.map((song) => (
+                <li key={song.songId}>
+                  {song.name} by {song.artist}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
     </section>
   );
 }

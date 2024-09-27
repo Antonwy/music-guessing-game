@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Suggestion from '@/components/suggestion';
-import { Button } from '@/components/ui/button';
+import Suggestion from "@/components/suggestion";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,18 +9,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useCurrentRoom } from '@/lib/rooms';
-import { submitSong } from '@/lib/songs';
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
-import { state } from '@/lib/state';
-import { useDebounce } from '@uidotdev/usehooks';
-import React, { useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useCurrentRoom } from "@/lib/rooms";
+import { submitSong } from "@/lib/songs";
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
+import { state } from "@/lib/state";
+import { useDebounce } from "@uidotdev/usehooks";
+import React, { useEffect, useState } from "react";
+import { useSnapshot } from "valtio";
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
   const { username, room } = useSnapshot(state);
   const [selectedSong, setSelectedSong] = useState<SpotifyTrackDetail | null>(
@@ -42,12 +42,20 @@ export default function Page() {
     }
   }, [debouncedQuery]);
 
+  useEffect(() => {
+    if (roomData?.round) {
+      setIsSubmitted(false);
+      setSelectedSong(null);
+      setSuggestions([]);
+    }
+  }, [roomData?.round]);
+
   const fetchSongSuggestions = async (query: string) => {
     try {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error('Error fetching Spotify suggestions:', error);
+      console.error("Error fetching Spotify suggestions:", error);
     }
   };
 
@@ -62,7 +70,7 @@ export default function Page() {
 
     // Add logic to send the selected song to the server
     // and navigate to the next page
-    console.log('Selected song:', selectedSong);
+    console.log("Selected song:", selectedSong);
     submitSong(selectedSong!, roomData!.code, roomData!.round);
     setIsSubmitted(true);
   };
@@ -70,42 +78,44 @@ export default function Page() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        {isSubmitted ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Song Submitted!</CardTitle>
-            </CardHeader>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Welcome to the Music Guessing Game, {username}
+            </CardTitle>
+          </CardHeader>
+          <CardDescription>
             <CardContent>
               <p>
-                Your song has been submitted. Please wait for the next step.
+                You are in room <span className="font-semibold">{room}</span>.
               </p>
+              {roomData?.round ? (
+                <p></p>
+              ) : (
+                <p>Please wait for the topic to be announced.</p>
+              )}
             </CardContent>
-          </Card>
-        ) : (
+          </CardDescription>
+        </Card>
+        {roomData?.round && (
           <Card>
             <CardHeader>
-              <CardTitle>Select a song!</CardTitle>
-              <div className="flex flex-col text-xs pb-2">
-                <p>
-                  Room: <span className="font-semibold">{room}</span>
-                </p>
-                <p>
-                  Username: <span className="font-semibold">{username}</span>
-                </p>
-                <p>
-                  Topic:{' '}
-                  <span className="font-semibold">
-                    {roomData?.round ?? 'No round started'}
-                  </span>
-                </p>
-              </div>
+              <CardTitle>
+                Select a song for the topic "{roomData?.round}"!
+              </CardTitle>
             </CardHeader>
             <CardDescription>
-              <Input
-                placeholder="Search for your song..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
+              <CardContent>
+                <p>
+                  What song about {roomData?.round} would you listen to? You can
+                  only select songs for which Spotify offers a preview, sorry!
+                </p>
+                <Input
+                  placeholder="Search for your song..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </CardContent>
             </CardDescription>
             <CardContent>
               {suggestions.length > 0 && (
@@ -126,7 +136,11 @@ export default function Page() {
               )}
             </CardContent>
             <CardFooter>
-              <Button type="submit" onClick={handleSubmitSongClick}>
+              <Button
+                type="submit"
+                onClick={handleSubmitSongClick}
+                disabled={isSubmitted}
+              >
                 Submit selected song
               </Button>
             </CardFooter>
