@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Suggestion from '@/components/suggestion';
-import { Button } from '@/components/ui/button';
+import Suggestion from "@/components/suggestion";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,19 +9,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useCurrentRoom } from '@/lib/rooms';
-import { submitSong } from '@/lib/songs';
-import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from '@/lib/spotify';
-import { state } from '@/lib/state';
-import { useDebounce } from '@uidotdev/usehooks';
-import React, { useEffect, useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { mainStyles, wrapperDivStyles } from '../styles';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useCurrentRoom } from "@/lib/rooms";
+import { submitSong } from "@/lib/songs";
+import { fetchSpotifySongSuggestions, SpotifyTrackDetail } from "@/lib/spotify";
+import { state } from "@/lib/state";
+import { useDebounce } from "@uidotdev/usehooks";
+import React, { useEffect, useState } from "react";
+import { useSnapshot } from "valtio";
+import { mainStyles, wrapperDivStyles } from "../styles";
 
 export default function Page() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SpotifyTrackDetail[]>([]);
   const { username, room } = useSnapshot(state);
   const [selectedSong, setSelectedSong] = useState<SpotifyTrackDetail | null>(
@@ -56,7 +56,7 @@ export default function Page() {
       const songs = await fetchSpotifySongSuggestions(query);
       setSuggestions(songs);
     } catch (error) {
-      console.error('Error fetching Spotify suggestions:', error);
+      console.error("Error fetching Spotify suggestions:", error);
     }
   };
 
@@ -71,7 +71,7 @@ export default function Page() {
 
     // Add logic to send the selected song to the server
     // and navigate to the next page
-    console.log('Selected song:', selectedSong);
+    console.log("Selected song:", selectedSong);
     await submitSong(selectedSong!, roomData!.code, roomData!.round, username);
     setIsSubmitted(true);
   };
@@ -83,7 +83,7 @@ export default function Page() {
           <CardHeader>
             <CardTitle>Welcome to the Music Guessing Game</CardTitle>
             <CardDescription>
-              You are currently logged in as{' '}
+              You are currently logged in as{" "}
               <span className="font-semibold">{username}</span>.
             </CardDescription>
           </CardHeader>
@@ -102,7 +102,7 @@ export default function Page() {
           <Card>
             <CardHeader>
               <CardTitle>
-                Select a song for the topic &quot;{roomData?.round}&quot;!
+                Select a song for the topic &quot;{roomData?.round}&quot;
               </CardTitle>
               <CardDescription>
                 What song about {roomData?.round} would you listen to? You can
@@ -114,6 +114,7 @@ export default function Page() {
                 placeholder="Search for your song..."
                 value={searchQuery}
                 onChange={handleSearchChange}
+                autoComplete="off"
               />
               {suggestions.length > 0 && (
                 <ul className="mt-4">

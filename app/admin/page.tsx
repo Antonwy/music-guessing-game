@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import SongPreview from '@/components/songPreview';
-import { Button } from '@/components/ui/button';
+import SongPreview from "@/components/songPreview";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,23 +9,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { createRoom, startRound, useUsersOfRoom } from '@/lib/rooms';
-import { useSongsOfRound } from '@/lib/songs';
-import { state } from '@/lib/state';
-import { useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { mainStyles, wrapperDivStyles } from '../styles';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { createRoom, startRound, useUsersOfRoom } from "@/lib/rooms";
+import { useSongsOfRound } from "@/lib/songs";
+import { useSnapshot } from "valtio";
+import { mainStyles, wrapperDivStyles } from "../styles";
+import { SpotifyTrackDetail } from "@/lib/spotify";
+import { state } from "@/lib/state";
+import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
+import Image from "next/image";
+import { FC, useEffect, useRef, useState } from "react";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 export default function Page() {
-  const [topic, setTopic] = useState('');
-  const { topic: submittedTopic, room } = useSnapshot(state);
+  const [topic, setTopic] = useState("");
+  const { topic: submittedTopic, room, accessToken } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
   const users = useUsersOfRoom(room);
-
-  console.log('Songs:', songs);
 
   const handleCreateRoomClick = async () => {
     const roomCode = await createRoom();
@@ -46,15 +48,42 @@ export default function Page() {
       return;
     }
 
-    console.log('Starting new round with topic:', topic);
+    console.log("Starting new round with topic:", topic);
 
     startRound(room!, topic);
     state.setTopic(topic);
   };
 
+  const handleSpotifyLogin = async () => {
+    SpotifyApi.performUserAuthorization(
+      "590b9c7485a3427a88ff27168c244419",
+      "http://localhost:3000/",
+      ["playlist-modify-private"],
+      async (accessToken) => {
+        state.setAccessToken(accessToken);
+      }
+    );
+  };
+
+  console.log("Access Token:", accessToken);
+
   return (
     <div className={wrapperDivStyles}>
       <main className={mainStyles}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Login with Spotify</CardTitle>
+          </CardHeader>
+          <CardContent>
+            This is not necessary but will allow you to save the songs from your
+            friends in a playlist.
+            {<div>Access Token: {accessToken?.access_token}</div>}
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSpotifyLogin}>Login with Spotify</Button>
+          </CardFooter>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Create a room</CardTitle>
@@ -91,14 +120,15 @@ export default function Page() {
             </CardHeader>
             <CardContent>
               <Input
-                placeholder="Topic for the songs"
+                placeholder="Topic for the round"
                 value={topic}
                 onChange={handleTopicChange}
+                autoComplete="off"
               />
             </CardContent>
             <CardFooter>
               <Button onClick={handleNewRoundClick}>
-                Begin round {topic ? `"${topic}"` : ''}
+                Begin round {topic ? `"${topic}"` : ""}
               </Button>
             </CardFooter>
           </Card>
@@ -108,15 +138,10 @@ export default function Page() {
           <Card>
             <CardHeader>
               <CardTitle>
-                Submitted Songs for Round &quot;{submittedTopic}&quot;
+                Submitted songs for round &quot;{submittedTopic}&quot;
               </CardTitle>
               <CardDescription>
-                Below you will find a list of submitted songs for the topic{' '}
-                <span className="font-semibold">
-                  &quot;
-                  {submittedTopic}&quot;
-                </span>
-                .
+                Below you will find a list of submitted songs.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -136,7 +161,7 @@ export default function Page() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Players in the room {room ? `"${room}"` : ''}</CardTitle>
+            <CardTitle>Players in the room {room ? `"${room}"` : ""}</CardTitle>
             <CardDescription>
               Below you will find a list of players in the room.
             </CardDescription>

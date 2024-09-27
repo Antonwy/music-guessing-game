@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { joinRoom } from '@/lib/rooms';
-import { state } from '@/lib/state';
-import { useRouter } from 'next/navigation';
-import { ChangeEventHandler, useState } from 'react';
-import { useSnapshot } from 'valtio';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { joinRoom } from "@/lib/rooms";
+import { state } from "@/lib/state";
+import { useRouter } from "next/navigation";
+import { ChangeEventHandler, useState } from "react";
+import { useSnapshot } from "valtio";
 
 export default function Page() {
-  const [inputState, setInputState] = useState({ username: '', roomCode: '' });
-  const [error, setError] = useState('');
+  const [inputState, setInputState] = useState({ username: "", roomCode: "" });
+  const [error, setError] = useState("");
   const { register } = useSnapshot(state);
   const router = useRouter();
 
@@ -21,9 +21,9 @@ export default function Page() {
     };
 
   const handleJoinRoomClick = async () => {
-    setError('');
+    setError("");
     if (!inputState.username || !inputState.roomCode) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function Page() {
 
     // Redirect to the room page
 
-    router.push('/game');
+    router.push("/game");
   };
 
   return (
@@ -41,14 +41,16 @@ export default function Page() {
       <h1 className="text-lg font-bold">Join Room</h1>
       <Input
         value={inputState.username}
-        onChange={handleInputChange('username')}
-        placeholder="Username"
+        onChange={handleInputChange("username")}
+        placeholder="Name"
+        autoComplete="off"
       />
       <Input
         value={inputState.roomCode}
-        onChange={handleInputChange('roomCode')}
+        onChange={handleInputChange("roomCode")}
         placeholder="Room Code"
         type="number"
+        autoComplete="off"
       />
       <Button onClick={handleJoinRoomClick}>Join Room</Button>
       {error && <div className="text-red-500">{error}</div>}
