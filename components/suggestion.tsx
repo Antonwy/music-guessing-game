@@ -1,7 +1,7 @@
-import { SpotifyTrackDetail } from '@/lib/spotify';
-import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
-import { FC, useEffect, useRef, useState } from 'react';
-import { Button } from './ui/button';
+import { SpotifyTrackDetail } from "@/lib/spotify";
+import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
+import { FC, useEffect, useRef, useState } from "react";
+import { Button } from "./ui/button";
 
 type SuggestionProps = {
   suggestion: SpotifyTrackDetail;
@@ -26,14 +26,14 @@ const Suggestion: FC<SuggestionProps> = ({
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener('play', handlePlay);
-      audioElement.addEventListener('pause', handlePause);
+      audioElement.addEventListener("play", handlePlay);
+      audioElement.addEventListener("pause", handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener('play', handlePlay);
-        audioElement.removeEventListener('pause', handlePause);
+        audioElement.removeEventListener("play", handlePlay);
+        audioElement.removeEventListener("pause", handlePause);
       }
     };
   }, []);
@@ -48,12 +48,12 @@ const Suggestion: FC<SuggestionProps> = ({
     }
   };
 
-  const isPlayable = suggestion.previewUrl != '';
+  const isPlayable = suggestion.previewUrl != "";
 
   return (
     <li
       key={index}
-      className={`p-2 border-b ${isSelected ? 'bg-blue-100' : ''} w-full`}
+      className={`p-2 border-b ${isSelected ? "bg-blue-100" : ""} w-full`}
     >
       <div className="flex gap-2 items-center">
         <Button asChild onClick={handlePlayPause} className="p-0">
@@ -67,14 +67,14 @@ const Suggestion: FC<SuggestionProps> = ({
             />
             <div
               className={`absolute bg-black bg-opacity-60 size-full flex items-center justify-center ${
-                isPlayable ? 'hidden' : ''
+                isPlayable ? "hidden" : ""
               }`}
             >
               <XIcon className="size-4 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? 'hidden' : ''
+                !isPlayable ? "hidden" : ""
               }`}
             >
               {!isPlaying ? (
@@ -93,8 +93,7 @@ const Suggestion: FC<SuggestionProps> = ({
         </div>
         <Button
           onClick={() => onSelect(suggestion)}
-          disabled={!isPlayable}
-          variant={isSelected ? 'default' : 'secondary'}
+          variant={isSelected ? "default" : "secondary"}
         >
           Select
         </Button>

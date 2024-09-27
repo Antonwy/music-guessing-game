@@ -44,6 +44,8 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, hidden }) => {
 
   const isPlayable = song.previewUrl != "";
 
+  hidden = isPlayable ? hidden : false;
+
   return (
     <li key={index} className={`p-2 border-b`}>
       <div className="flex gap-2 items-center">
