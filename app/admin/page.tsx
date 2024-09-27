@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { createRoom, startRound, useUsersOfRoom } from "@/lib/rooms";
 import { useSongsOfRound } from "@/lib/songs";
@@ -24,6 +26,7 @@ import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 export default function Page() {
   const [topic, setTopic] = useState("");
+  const [hidden, setHidden] = useState(true);
   const { topic: submittedTopic, room, accessToken } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
@@ -63,6 +66,9 @@ export default function Page() {
         state.setAccessToken(accessToken);
       }
     );
+  };
+  const handleHiddenChange = (checked: boolean) => {
+    setHidden(checked);
   };
 
   console.log("Access Token:", accessToken);
@@ -142,6 +148,14 @@ export default function Page() {
               </CardTitle>
               <CardDescription>
                 Below you will find a list of submitted songs.
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="hidden-song-details"
+                    checked={hidden}
+                    onCheckedChange={handleHiddenChange}
+                  />
+                  <Label htmlFor="hidden-song-details">Hide song details</Label>
+                </div>
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -151,7 +165,8 @@ export default function Page() {
                     key={song.songId}
                     song={song}
                     index={index}
-                    user="leon"
+                    user="xxx"
+                    hidden={hidden}
                   />
                 ))}
               </ul>

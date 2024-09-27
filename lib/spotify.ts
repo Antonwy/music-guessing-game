@@ -25,3 +25,17 @@ export type SpotifyTrackDetail = {
   thumbnailUrl: string;
   songId: string;
 }; 
+
+/*
+export const saveSongsToPlaylist = async (topic: string, songs: SpotifyTrackDetail[], accessToken: string) => {
+  const playlist = await SpotifyApi.withUserAuthorization(
+    process.env.NEXT_PUBLIC_SPOTIFY_CLIENT!,
+  ).playlists.createPlaylist("", ) .(topic, {
+    description: `Playlist for topic: ${topic}`,
+    public: false,
+  }, accessToken);
+
+  const uris = songs.map((song) => `spotify:track:${song.songId}`);
+  await spotifyApi.addTracksToPlaylist(playlist.id, uris, accessToken);
+};
+*/

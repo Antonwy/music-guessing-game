@@ -1,15 +1,16 @@
-import { SpotifyTrackDetail } from '@/lib/spotify';
-import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
-import { FC, useEffect, useRef, useState } from 'react';
-import { Button } from './ui/button';
+import { SpotifyTrackDetail } from "@/lib/spotify";
+import { PauseIcon, PlayIcon, XIcon } from "lucide-react";
+import { FC, useEffect, useRef, useState } from "react";
+import { Button } from "./ui/button";
 
 type SongPreviewProps = {
   song: SpotifyTrackDetail;
   index: number;
   user: string;
+  hidden: boolean;
 };
 
-const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
+const SongPreview: FC<SongPreviewProps> = ({ song, index, user, hidden }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -19,14 +20,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
 
     const audioElement = audioRef.current;
     if (audioElement) {
-      audioElement.addEventListener('play', handlePlay);
-      audioElement.addEventListener('pause', handlePause);
+      audioElement.addEventListener("play", handlePlay);
+      audioElement.addEventListener("pause", handlePause);
     }
 
     return () => {
       if (audioElement) {
-        audioElement.removeEventListener('play', handlePlay);
-        audioElement.removeEventListener('pause', handlePause);
+        audioElement.removeEventListener("play", handlePlay);
+        audioElement.removeEventListener("pause", handlePause);
       }
     };
   }, []);
@@ -41,7 +42,7 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
     }
   };
 
-  const isPlayable = song.previewUrl != '';
+  const isPlayable = song.previewUrl != "";
 
   return (
     <li key={index} className={`p-2 border-b`}>
@@ -53,23 +54,27 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
           className="p-0"
         >
           <div className="relative">
-            <img
-              src={song.thumbnailUrl}
-              alt={`${song.name} thumbnail`}
-              width={48}
-              height={48}
-              className="object-cover rounded-full"
-            />
+            {hidden ? (
+              <div className="w-12 h-12 bg-black bg-opacity-60 rounded-full"></div>
+            ) : (
+              <img
+                src={song.thumbnailUrl}
+                alt={`${song.name} thumbnail`}
+                width={48}
+                height={48}
+                className="object-cover rounded-full"
+              />
+            )}
             <div
               className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? 'hidden' : ''
+                isPlayable ? "hidden" : ""
               }`}
             >
               <XIcon className="w-8 h-8 text-white" />
             </div>
             <div
               className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? 'hidden' : ''
+                !isPlayable ? "hidden" : ""
               }`}
             >
               {!isPlaying ? (
@@ -82,8 +87,14 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
         </Button>
         <div className="flex-grow">
           <div className="max-w-36 sm:max-w-full">
-            <p className="truncate text-xl font-semibold">{song.name}</p>
-            <p className="truncate">{song.artist}</p>
+            {hidden ? (
+              <p className="truncate text-xl font-semibold">Song {index}</p>
+            ) : (
+              <>
+                <p className="truncate text-xl font-semibold">{song.name}</p>
+                <p className="truncate">{song.artist}</p>
+              </>
+            )}
           </div>
         </div>
         <audio ref={audioRef} controls className="hidden">
