@@ -3,20 +3,13 @@ import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { Button } from './ui/button';
 
-type SuggestionProps = {
-  suggestion: SpotifyTrackDetail;
+type SongPreviewProps = {
+  song: SpotifyTrackDetail;
   index: number;
-  onSelect: (suggestion: SpotifyTrackDetail) => void;
-  isSelected: boolean;
+  user: string;
 };
 
-// Define the Suggestion component
-const Suggestion: FC<SuggestionProps> = ({
-  suggestion,
-  index,
-  onSelect,
-  isSelected,
-}) => {
+const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -48,13 +41,10 @@ const Suggestion: FC<SuggestionProps> = ({
     }
   };
 
-  const isPlayable = suggestion.previewUrl != '';
+  const isPlayable = song.previewUrl != '';
 
   return (
-    <li
-      key={index}
-      className={`p-2 border-b ${isSelected ? 'bg-blue-100' : ''}`}
-    >
+    <li key={index} className={`p-2 border-b`}>
       <div className="flex items-center space-x-4">
         <Button
           asChild
@@ -64,8 +54,8 @@ const Suggestion: FC<SuggestionProps> = ({
         >
           <div className="relative">
             <img
-              src={suggestion.thumbnailUrl}
-              alt={`${suggestion.name} thumbnail`}
+              src={song.thumbnailUrl}
+              alt={`${song.name} thumbnail`}
               width={48}
               height={48}
               className="object-cover rounded-full"
@@ -92,19 +82,12 @@ const Suggestion: FC<SuggestionProps> = ({
         </Button>
         <div className="space-y-2">
           <p className="truncate w-[500px] text-xl font-semibold">
-            {suggestion.name}
+            {song.name}
           </p>
-          <p className="truncate w-[450px]">{suggestion.artist}</p>
+          <p className="truncate w-[450px]">{song.artist}</p>
         </div>
-        <Button
-          onClick={() => onSelect(suggestion)}
-          disabled={!isPlayable}
-          variant={isSelected ? 'default' : 'secondary'}
-        >
-          Select
-        </Button>
         <audio ref={audioRef} controls className="hidden">
-          <source src={suggestion.previewUrl} type="audio/mpeg" />
+          <source src={song.previewUrl} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
       </div>
@@ -112,4 +95,4 @@ const Suggestion: FC<SuggestionProps> = ({
   );
 };
 
-export default Suggestion;
+export default SongPreview;

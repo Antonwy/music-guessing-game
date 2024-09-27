@@ -1,5 +1,6 @@
 'use client';
 
+import SongPreview from '@/components/songPreview';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,13 +11,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { createRoom, startRound } from '@/lib/rooms';
+import { createRoom, startRound, useUsersOfRoom } from '@/lib/rooms';
 import { useSongsOfRound } from '@/lib/songs';
-import { SpotifyTrackDetail } from '@/lib/spotify';
 import { state } from '@/lib/state';
-import { PauseIcon, PlayIcon, XIcon } from 'lucide-react';
-import Image from 'next/image';
-import { FC, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { mainStyles, wrapperDivStyles } from '../styles';
 
@@ -25,6 +23,7 @@ export default function Page() {
   const { topic: submittedTopic, room } = useSnapshot(state);
 
   const songs = useSongsOfRound(room, submittedTopic);
+  const users = useUsersOfRoom(room);
 
   console.log('Songs:', songs);
 
@@ -134,99 +133,25 @@ export default function Page() {
             </CardContent>
           </Card>
         )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Players in the room {room ? `"${room}"` : ''}</CardTitle>
+            <CardDescription>
+              Below you will find a list of players in the room.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul>
+              {users.map((song, index) => (
+                <li key={index} className="p-2 border-b">
+                  {song.username}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
 }
-
-type SongPreviewProps = {
-  song: SpotifyTrackDetail;
-  index: number;
-  user: string;
-};
-
-const SongPreview: FC<SongPreviewProps> = ({ song, index }) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-
-    const audioElement = audioRef.current;
-    if (audioElement) {
-      audioElement.addEventListener('play', handlePlay);
-      audioElement.addEventListener('pause', handlePause);
-    }
-
-    return () => {
-      if (audioElement) {
-        audioElement.removeEventListener('play', handlePlay);
-        audioElement.removeEventListener('pause', handlePause);
-      }
-    };
-  }, []);
-
-  const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-    }
-  };
-
-  const isPlayable = song.previewUrl != '';
-
-  return (
-    <li key={index} className={`p-2 border-b`}>
-      <div className="flex items-center space-x-4">
-        <Button
-          asChild
-          variant="ghost"
-          onClick={handlePlayPause}
-          className="p-0"
-        >
-          <div className="relative">
-            <Image
-              src={song.thumbnailUrl}
-              alt={`${song.name} thumbnail`}
-              width={48}
-              height={48}
-              className="object-cover rounded-full"
-            />
-            <div
-              className={`absolute bg-black bg-opacity-60 rounded-full w-12 h-12 flex items-center justify-center ${
-                isPlayable ? 'hidden' : ''
-              }`}
-            >
-              <XIcon className="w-8 h-8 text-white" />
-            </div>
-            <div
-              className={`absolute inset-0 rounded-full flex items-center justify-center ${
-                !isPlayable ? 'hidden' : ''
-              }`}
-            >
-              {!isPlaying ? (
-                <PlayIcon className="w-8 h-8 text-white" />
-              ) : (
-                <PauseIcon className="w-8 h-8 text-white" />
-              )}
-            </div>
-          </div>
-        </Button>
-        <div className="space-y-2">
-          <p className="truncate w-[500px] text-xl font-semibold">
-            {song.name}
-          </p>
-          <p className="truncate w-[450px]">{song.artist}</p>
-        </div>
-        <audio ref={audioRef} controls className="hidden">
-          <source src={song.previewUrl} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-    </li>
-  );
-};

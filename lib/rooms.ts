@@ -1,4 +1,10 @@
-import { doc, onSnapshot, setDoc } from '@firebase/firestore';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  setDoc,
+} from '@firebase/firestore';
 import db from './firestore';
 import { useSnapshot } from 'valtio';
 import { state } from './state';
@@ -74,3 +80,36 @@ export function useCurrentRoom() {
 
   return roomData;
 }
+
+type User = {
+  username: string;
+};
+
+export const useUsersOfRoom = (roomCode?: string) => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (!roomCode) {
+      return;
+    }
+
+    const q = query(collection(db, 'rooms', roomCode, 'players'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setUsers(
+        snapshot.docs.map((doc) => {
+          const data = doc.data();
+
+          return {
+            username: doc.id,
+            ...data,
+          } as User;
+        })
+      );
+    });
+
+    return unsubscribe;
+  }, [roomCode]);
+
+  return users;
+};
