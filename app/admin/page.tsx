@@ -48,7 +48,7 @@ export default function Page() {
     console.log("Starting new round with topic:", topic);
 
     startRound(room!, topic);
-    setTopic(topic);
+    state.setTopic(topic);
   };
 
   return (
