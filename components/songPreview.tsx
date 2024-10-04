@@ -94,10 +94,16 @@ const SongPreview: FC<SongPreviewProps> = ({ song, index, hidden }) => {
         <div className="flex-grow">
           <div className="max-w-36 sm:max-w-full">
             {hidden ? (
-              <p className="truncate text-xl font-semibold">Song {index}</p>
+              <p className="truncate text-xl font-semibold">Song {index + 1}</p>
             ) : (
               <>
-                <p className="truncate text-xl font-semibold">{song.name}</p>
+                <a
+                  className="truncate text-xl font-semibold"
+                  href={`https://open.spotify.com/track/${song.songId}`}
+                  target="_blank"
+                >
+                  Song {index + 1}: {song.name}
+                </a>
                 <p className="truncate">{song.artist}</p>
               </>
             )}

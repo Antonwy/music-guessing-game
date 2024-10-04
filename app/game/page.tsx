@@ -139,7 +139,7 @@ export default function Page() {
                 onClick={handleSubmitSongClick}
                 disabled={isSubmitted}
               >
-                Submit selected song
+                {isSubmitted ? "Submitted" : "Submit selected song"}
               </Button>
             </CardFooter>
           </Card>
